@@ -8,6 +8,7 @@
 #include <QMap>
 #include <fstream>
 #define Movies "Movies.txt"
+#define Nf "Nf.txt"
 using namespace std;
 typedef string st;
 class Movie {
@@ -31,53 +32,81 @@ int main(void)
     QList<Movie> q;
     QList<Movie> qq;
     QMap<string,QList<Movie>> sq;
-    int na , year ,capasity ,i=1 ,nf=0;
+    int na , year ,capacity ,i=1 ,nff=0;
     QVector<string> actors;
     string in , name, director;
+    bool st =false;
+    //reading file
+    fstream file;
+    file.open(Nf,ios::in | ios::out);
+    if(file.is_open()){
+        file >> nff;
+    }
+    file.close();
+    fstream qst;
+    qst.open(Movies,ios::in | ios::out);
+    if(qst.is_open()){
+        string tp="" , tmp;
+        while(getline(qst,tp)){
+            int iname = tp.find("name:");
+            for(int  j=iname+5;tp[j]!='/';j++)
+                tmp+=tp[j];
+            name = tmp;
+            tmp="";
+            int idirector = tp.find("director:");
+            for(int j=idirector+9;tp[j]!='/';j++)
+                tmp+=tp[j];
+            director = tmp;
+            tmp="";
+            int iactors = tp.find("actors:");
+            for(int j=iactors+7;tp[j]!='/';j++)
+                tmp+=tp[j];
+            actors.push_back(tmp);
+            tmp="";
+            int iyear = tp.find("year:");
+            for(int j=iyear+5;tp[j]!='/';j++)
+                tmp+=tp[j];
+            year = stoi(tmp);
+            tmp="";
+            int icapacity = tp.find("capacity:");
+            for(int j=icapacity+9;tp[j]!='/';j++)
+                tmp+=tp[j];
+            capacity = stoi(tmp);
+            Movie a(name,director,actors,year,capacity);
+            q.push_back(a);
+            tmp="";
+        }
+        qst.close();
+    }
+
     while(1){
-        //reading file
-        if(nf==0)
+        //update movies file
+        if(st==true)
         {
+            i=0;
             fstream qst;
-            qst.open(Movies,ios::in | ios::out);
-            if(qst.is_open()){
-                string tp="" , tmp;
-                while(getline(qst,tp)){
-                    int iname = tp.find("name:");
-                    for(int  j=iname+5;tp[j]!='/';j++)
-                        tmp+=tp[j];
-                    name = tmp;
-                    tmp="";
-                    int idirector = tp.find("director:");
-                    for(int j=idirector+9;tp[j]!='/';j++)
-                        tmp+=tp[j];
-                    director = tmp;
-                    tmp="";
-                    int iactors = tp.find("actors:");
-                    for(int j=iactors+7;tp[j]!='/';j++)
-                        tmp+=tp[j];
-                    actors.push_back(tmp);
-                    tmp="";
-                    int iyear = tp.find("year:");
-                    for(int j=iyear+5;tp[j]!='/';j++)
-                        tmp+=tp[j];
-                    to_string(year) = tmp;
-                    tmp="";
-                    int icapacity = tp.find("capacity:");
-                    for(int j=icapacity+9;tp[j]!='/';j++)
-                        tmp+=tp[j];
-                    to_string(capasity) = tmp;
-                    Movie a(name,director,actors,year,capasity);
-                    q.push_back(a);
-                    tp="";
-                    qst.close();
-                }
+            qst.open(Movies,ios::in | ios::out |ios::trunc);
+            for(auto itr = q.begin();itr!=q.end();itr ++,i++)
+            {
+                qst <<"name:"<<(*itr).name<<"/"
+                   <<"director:"<<(*itr).director<<"/"
+                  <<"actors:"<<(*itr).actors.at(i)<<"/"
+                 <<"year:"<<(*itr).year<<"/"
+                <<"capacity:"<<(*itr).capacity<<"/"
+                <<endl;
+
             }
+            st=false;
         }
         cout << "Enter + for add, - for remove, p for print, g for make group, e for edit a film " << endl;
         cin >> in;
         if(in=="+")
         {
+            nff++;
+            ofstream file;
+            file.open(Nf,ios::in | ios::out);
+            file << nff;
+            file.close();
             ofstream qst;
             qst.open(Movies , ios::in | ios::app );
             cout << "Enter the name of film : ";
@@ -104,12 +133,11 @@ int main(void)
             cout << "In wich year this file was created ? ";
             cin >> year ;
             qst << "year:"<<year<<"/";
-            cout << "Enter the capasity of film : ";
-            cin >> capasity;
-            qst << "capacity:"<<capasity<<"/";
-            Movie a(name,director,actors,year,capasity);
+            cout << "Enter the capacity of film : ";
+            cin >> capacity;
+            qst << "capacity:"<<capacity<<"/";
+            Movie a(name,director,actors,year,capacity);
             q.push_back(a);
-            nf++;
             qst <<endl;
             qst.close();
         }
@@ -134,6 +162,11 @@ int main(void)
         {
             if(q.size()>0)
             {
+                nff--;
+                ofstream file;
+                file.open(Nf,ios::in | ios::out);
+                file << nff;
+                file.close();
                 i=1;
                 cout << "The films are here : " << endl;
                 for(auto itr = q.begin();itr!=q.end();itr ++,i++)
@@ -149,8 +182,10 @@ int main(void)
                 for(auto itr = q.begin();itr!=q.end();itr ++,i++)
                 {
                     cout <<i<<": " <<(*itr).name << endl;
+
                 }
-                nf--;
+                st=true;
+                nff--;
             }
             else
                 cout << "No films are available" << endl;
@@ -221,12 +256,12 @@ int main(void)
             }
             cout << "In wich year this file was created ? ";
             cin >> year;
-            cout << "Enter the capasity of film";
-            cin >> capasity;
-            Movie a(name,director,actors,year,capasity);
+            cout << "Enter the capacity of film : ";
+            cin >> capacity;
+            Movie a(name,director,actors,year,capacity);
             q.push_back(a);
+            st = true;
         }
     }
     return 0;
 }
-
