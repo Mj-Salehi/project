@@ -1,0 +1,2 @@
+name:a/director:b/actors:c d /year:3/capacity:4/
+name:a/director:b/actors:c d /year:3/capacity:4/
