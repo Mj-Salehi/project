@@ -1,1 +1,0 @@
-name:a/director:b/actors:c /year:2/capacity:3/
