@@ -1,0 +1,3 @@
+name:a/director:v/actors:a /year:2/capacity:3/
+name:b/director:c/actors:e /year:2/capacity:4/
+name:c/director:i/actors:w /year:3/capacity:4/
