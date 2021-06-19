@@ -1,3 +1,4 @@
-name:first/member:a c /
-name:two/member:a c  /
-name:three/member:a b c /
+NAME:first/MEMBER:amir amirali /
+NAME:second/MEMBER:amin amirali /
+NAME:third/MEMBER:amir amin amirali /
+NAME:fourth/MEMBER:amin amin amin /

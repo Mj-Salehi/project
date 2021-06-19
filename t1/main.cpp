@@ -36,34 +36,34 @@ int main(void)
     int na , year ,capacity ,i=1 ;
     QVector<string> actors;
     string in , name, director;
-    bool st =false,go=true;
+    bool st =false,gt=false,go=true;
     fstream qst;
     //add movise from file to qlist
     qst.open(Movies,ios::in | ios::out);
     if(qst.is_open()){
         string tp="" , tmp;
         while(getline(qst,tp)){
-            int iname = tp.find("name:");
+            int iname = tp.find("NAME:");
             for(int  j=iname+5;tp[j]!='/';j++)
                 tmp+=tp[j];
             name = tmp;
             tmp="";
-            int idirector = tp.find("director:");
+            int idirector = tp.find("DIRECTOR:");
             for(int j=idirector+9;tp[j]!='/';j++)
                 tmp+=tp[j];
             director = tmp;
             tmp="";
-            int iactors = tp.find("actors:");
+            int iactors = tp.find("ACTORS:");
             for(int j=iactors+7;tp[j]!='/';j++)
                 tmp+=tp[j];
             actors.push_back(tmp);
             tmp="";
-            int iyear = tp.find("year:");
+            int iyear = tp.find("YEAR:");
             for(int j=iyear+5;tp[j]!='/';j++)
                 tmp+=tp[j];
             year = stoi(tmp);
             tmp="";
-            int icapacity = tp.find("capacity:");
+            int icapacity = tp.find("CAPACITY:");
             for(int j=icapacity+9;tp[j]!='/';j++)
                 tmp+=tp[j];
             capacity = stoi(tmp);
@@ -83,12 +83,12 @@ int main(void)
             string tp="" , tmp, gname,members;
             while(getline(gfile,tp)){
                 qq.clear();
-                int iname = tp.find("name:");
+                int iname = tp.find("NAME:");
                 for(int  j=iname+5;tp[j]!='/';j++)
                     tmp+=tp[j];
                 gname = tmp;
                 tmp="";
-                int imember = tp.find("member:");
+                int imember = tp.find("MEMBER:");
                 for(int j=imember+7;tp[j]!='/';j++)
                     tmp+=tp[j];
                 members = tmp;
@@ -136,15 +136,29 @@ int main(void)
                             qst.open(Movies,ios::in | ios::out |ios::trunc);
                             for(auto itr = q.begin();itr!=q.end();itr ++,i++)
                             {
-                                qst <<"name:"<<(*itr).name<<"/"
-                                   <<"director:"<<(*itr).director<<"/"
-                                  <<"actors:"<<(*itr).actors.at(i)<<"/"
-                                 <<"year:"<<(*itr).year<<"/"
-                                <<"capacity:"<<(*itr).capacity<<"/"
+                                qst <<"NAME:"<<(*itr).name<<"/"
+                                   <<"DIRECTOR:"<<(*itr).director<<"/"
+                                  <<"ACTORS:"<<(*itr).actors.at(i)<<"/"
+                                 <<"YEAR:"<<(*itr).year<<"/"
+                                <<"CAPACITY:"<<(*itr).capacity<<"/"
                                 <<endl;
 
                             }
                             st=false;
+                        }
+                        if(gt==true)
+                        {
+                            i=0;
+                            fstream qst;
+                            qst.open(Group,ios::in | ios::out |ios::trunc);
+                            for(auto itr = sq.begin();itr!=sq.end();itr ++,i++)
+                            {
+                                qst <<"NAME:"<<(*itr).at(i)<<"/"
+                                   <<"MEMBER:"<<(*itr).value(i)<<"/"<<endl;
+                                i++;
+
+                            }
+                            gt=false;
                         }
                         cout << "Enter + for add, - for remove, p for print, g for make group, e for edit a film, f for finish " << endl;
                         cin >> in;
@@ -154,17 +168,17 @@ int main(void)
                             qst.open(Movies , ios::in | ios::app );
                             cout << "Enter the name of film : ";
                             cin >> name ;
-                            qst <<"name:" << name << "/" ;
+                            qst <<"NAME:" << name << "/" ;
                             cout << "Enter the director of film : ";
                             cin >> director;
-                            qst << "director:"<<director<<"/";
+                            qst << "DIRECTOR:"<<director<<"/";
                             cout << "How many actors dose it have ? ";
                             cin >> na;
                             if(na>0)
                             {
                                 cout << "Enter the name of actors" << endl;
                                 string actor;
-                                qst << "actors:";
+                                qst << "ACTORS:";
                                 for(int i=0;i<na;i++)
                                 {
                                     cin >> actor;
@@ -175,10 +189,10 @@ int main(void)
                             }
                             cout << "In wich year this file was created ? ";
                             cin >> year ;
-                            qst << "year:"<<year<<"/";
+                            qst << "YEAR:"<<year<<"/";
                             cout << "Enter the capacity of film : ";
                             cin >> capacity;
-                            qst << "capacity:"<<capacity<<"/";
+                            qst << "CAPACITY:"<<capacity<<"/";
                             Movie a(name,director,actors,year,capacity);
                             q.push_back(a);
                             qst <<endl;
@@ -239,35 +253,39 @@ int main(void)
                             cout << "Enter the name of group : ";
                             string ng;
                             cin >> ng;
-                            fstream gfile;
-                            gfile.open(Group,ios::in|ios::out|ios::app);
-                            gfile << "name:" << ng << "/member:";
+                            qq.clear();
                             cout << "How many films do you want to be in a group : ";
                             int nug;
                             cin >> nug;
                             int number;
-                            qq.clear();
+                            string tmp="";
                             for(int j=0;j<nug;j++)
                             {
                                 cout << "enter the " << j+1<<" member : ";
                                 cin >> number;
-                                qq.push_back(q.at(number-1).name);
+                                tmp+=q.at(number-1).name;
+                                tmp+=" ";
                             }
+                            fstream gfile;
+                            gfile.open(Group,ios::in|ios::out|ios::app);
+                            qq.push_back(tmp);
+                            gfile << "NAME:" << ng << "/" << "MEMBER:" << tmp << "/" << endl;
+                            gfile.close();
                             sq[ng] = qq;
                             QMapIterator<string,QList<string>> ii(sq);
                             while (ii.hasNext()) {
+
                                 i=0;
                                 ii.next();
-
                                 cout << ii.key() << ":" ;
                                 for(auto it = ii.value().begin();it!=ii.value().end();it++)
                                 {
                                     cout << ii.value().at(i) <<" ";
-                                    gfile << ii.value().at(i) <<" ";
+
                                     i++;
                                 }
                                 cout << endl;
-                                gfile << "/" <<endl;
+
                             }
                             gfile.close();
                         }
@@ -364,6 +382,35 @@ int main(void)
     if(enter==1)
     {
         cout << "Hi " << user << endl ;
+        cout << "for search enter s, for print all the film enter p, for show in group enter g" << endl;
+        string input;
+        cin >> input;
+        if(input=="s")
+        {
+            ifstream fileInput;
+            int offset;
+            string line;
+            string search ;
+            cin >> search;
+            // open file to search
+            fileInput.open(Movies);
+            if(fileInput.is_open()) {
+                while(!fileInput.eof()) {
+                    getline(fileInput, line);
+                    if ((offset = line.find(search, 0)) != string::npos) {
+
+                        string tmp="",tp="";
+                        int iname = line.find("NAME:");
+                        for(int  j=iname+5;line[j]!='/';j++)
+                            tmp+=line[j];
+
+                        cout << tmp << "->" << search<< endl;
+                    }
+                }
+                fileInput.close();
+            }
+            else cout << "Unable to open file.";
+        }
         //print movies
         if(q.size()>0)
         {
@@ -424,11 +471,11 @@ int main(void)
                 qst.open(Movies,ios::in | ios::out |ios::trunc);
                 for(auto itr = q.begin();itr!=q.end();itr ++,i++)
                 {
-                    qst <<"name:"<<(*itr).name<<"/"
-                       <<"director:"<<(*itr).director<<"/"
-                      <<"actors:"<<(*itr).actors.at(i)<<"/"
-                     <<"year:"<<(*itr).year<<"/"
-                    <<"capacity:"<<(*itr).capacity<<"/"
+                    qst <<"NAME:"<<(*itr).name<<"/"
+                       <<"DIRECTOR:"<<(*itr).director<<"/"
+                      <<"ACTORS:"<<(*itr).actors.at(i)<<"/"
+                     <<"YEAR:"<<(*itr).year<<"/"
+                    <<"CAPACITY:"<<(*itr).capacity<<"/"
                     <<endl;
 
                 }
