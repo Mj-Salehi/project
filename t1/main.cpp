@@ -160,7 +160,7 @@ int main(void)
                             }
                             gt=false;
                         }
-                        cout << "Enter + for add, - for remove, p for print, g for make group, e for edit a film, f for finish " << endl;
+                        cout << "Enter + for add, - for remove, p for print, g for make group, sg for show in group, e for edit a film, f for finish " << endl;
                         cin >> in;
                         if(in=="+")
                         {
@@ -287,8 +287,28 @@ int main(void)
                                 cout << endl;
 
                             }
-                            gfile.close();
+
                         }
+                        else if(in=="sg")
+                        {
+                            QMapIterator<string,QList<string>> ii(sq);
+                            while (ii.hasNext()) {
+
+                                i=0;
+                                ii.next();
+                                cout << ii.key() << ":" ;
+                                for(auto it = ii.value().begin();it!=ii.value().end();it++)
+                                {
+                                    cout << ii.value().at(i) <<" ";
+
+                                    i++;
+                                }
+                                cout << endl;
+
+                            }
+
+                        }
+
                         else if(in=="e")
                         {
                             i=1;
