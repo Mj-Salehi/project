@@ -402,9 +402,55 @@ int main(void)
     if(enter==1)
     {
         cout << "Hi " << user << endl ;
-        cout << "for search enter s, for print all the film enter p, for show in group enter g" << endl;
+        cout << "for search enter s,for search in group enter sg, for print all the film enter p, for show in group enter g" << endl;
         string input;
         cin >> input;
+        //search in groups
+        if(input=="sg")
+        {
+            string si;
+
+            while(si!="f")
+            {
+                system("CLS");
+                ifstream fileInput;
+                int offset;
+                string line;
+                string search ;
+                cout << "enter your string : " << endl;
+                cin >> search;
+                // open file to search
+                fileInput.open(Group);
+                if(fileInput.is_open()) {
+                    while(!fileInput.eof()) {
+                        getline(fileInput, line);
+                        if ((offset = line.find(search, 0)) != string::npos) {
+                            string tmp="";
+                            int iname = line.find("NAME:");
+                            for(int  j=iname;line[j]!='/';j++)
+                                tmp+=line[j];
+                            cout << tmp << endl ;
+                            tmp="";
+                            int idirector = line.find("MEMBER:");
+                            for(int j=idirector;line[j]!='/';j++)
+                                tmp+=line[j];
+                            cout << tmp << endl ;
+                            tmp="";
+                            cout << endl;
+                        }
+                    }
+                    fileInput.close();
+                }
+                else if(!fileInput.is_open())
+                {
+                    cout << "Unable to open file.";
+                    break;
+                }
+
+                cout << "for finish searching enter f else enter c" << endl;
+                cin >> si;
+            }
+        }
         //search in movies
         if(input=="s")
         {
