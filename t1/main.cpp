@@ -1,4 +1,5 @@
 #include <iostream>
+#include <windows.h>
 #include <string>
 #include <QList>
 #include <QFile>
@@ -12,18 +13,17 @@
 #define Admin "admin.txt"
 #define Group "group.txt"
 using namespace std;
-typedef string st;
+typedef string str;
 class Movie {
 public:
-    st name, director;
+    str name, director;
     QVector<string> actors;
     int year , capacity;
-    Movie(st n,st d,QVector<string> a,int y, int c)
+    Movie(str n,str d,QVector<str> a,int y, int c)
     {
         name = n;
         actors = a;
         director = d;
-        actors = a;
         year = y;
         capacity = c;
     }
@@ -31,17 +31,18 @@ public:
 int main(void)
 {
     QList<Movie> q;
-    QList<string> qq;
-    QMap<string,QList<string>> sq;
+    QList<str> qq;
+    QMap<str,QList<str>> sq;
+    QVector<str> actors;
     int na , year ,capacity ,i=1 ;
-    QVector<string> actors;
-    string in , name, director;
+    str in , name, director;
     bool st =false,gt=false,go=true;
-    fstream qst;
+
     //add movise from file to qlist
+    fstream qst;
     qst.open(Movies,ios::in | ios::out);
     if(qst.is_open()){
-        string tp="" , tmp;
+        str tp="" , tmp;
         while(getline(qst,tp)){
             int iname = tp.find("NAME:");
             for(int  j=iname+5;tp[j]!='/';j++)
@@ -73,14 +74,15 @@ int main(void)
         }
         qst.close();
     }
-    //add group to qlist
+    //add group from file to qlist
     if(go==true)
     {
         fstream gfile;
         gfile.open(Group,ios::in|ios::out);
-        if(gfile.is_open())
+        if(gfile.is_open() )
         {
-            string tp="" , tmp, gname,members;
+
+            str tp="" , tmp, gname,members;
             while(getline(gfile,tp)){
                 qq.clear();
                 int iname = tp.find("NAME:");
@@ -101,9 +103,10 @@ int main(void)
         gfile.close();
     }
     int enter=0;
+    //-------------------------------------------------------
     cout << "Hi"<< endl;
     cout << "If you are admin enter a, if you are user enter u and if you are new user enter n"<< endl;
-    string user , pass ,  iii;
+    str user , pass ,  iii;
     cin >> iii;
     if(iii=="a")
     {
@@ -115,7 +118,7 @@ int main(void)
         af.open(Admin,ios::in | ios::out);
         if(af.is_open())
         {
-            string tp="" , tmp1,tmp2;
+            str tp="" , tmp1,tmp2;
             while(getline(af,tp)){
                 int uname = tp.find("username:");
                 for(int  j=uname+9;tp[j]!='/';j++)
@@ -177,7 +180,7 @@ int main(void)
                             if(na>0)
                             {
                                 cout << "Enter the name of actors" << endl;
-                                string actor;
+                                str actor;
                                 qst << "ACTORS:";
                                 for(int i=0;i<na;i++)
                                 {
@@ -251,14 +254,14 @@ int main(void)
                             }
                             i=1;
                             cout << "Enter the name of group : ";
-                            string ng;
+                            str ng;
                             cin >> ng;
                             qq.clear();
                             cout << "How many films do you want to be in a group : ";
                             int nug;
                             cin >> nug;
                             int number;
-                            string tmp="";
+                            str tmp="";
                             for(int j=0;j<nug;j++)
                             {
                                 cout << "enter the " << j+1<<" member : ";
@@ -272,7 +275,7 @@ int main(void)
                             gfile << "NAME:" << ng << "/" << "MEMBER:" << tmp << "/" << endl;
                             gfile.close();
                             sq[ng] = qq;
-                            QMapIterator<string,QList<string>> ii(sq);
+                            QMapIterator<str,QList<str>> ii(sq);
                             while (ii.hasNext()) {
 
                                 i=0;
@@ -291,7 +294,7 @@ int main(void)
                         }
                         else if(in=="sg")
                         {
-                            QMapIterator<string,QList<string>> ii(sq);
+                            QMapIterator<str,QList<str>> ii(sq);
                             while (ii.hasNext()) {
 
                                 i=0;
@@ -330,7 +333,7 @@ int main(void)
                             cin >> na;
                             if(na>0)
                                 cout << "Enter the name of actors" << endl;
-                            string actor;
+                            str actor;
                             for(int i=0;i<na;i++)
                             {
                                 cin >> actor;
@@ -350,22 +353,45 @@ int main(void)
                 }
                 tmp1="";
                 tmp2=tmp1;
-                cout << "username or password is wrong" << endl;
+                if(user!=tmp1 || pass!=tmp2)
+                {
+                    cout << "username or password is wrong" << endl;
+                    Sleep(1000);
+                }
+                system("CLS");
                 main();
             }
         }
     }
     else if(iii=="n")
     {
-        cout << "enter your username:";
-        cin >> user;
-        cout << "enter your password:";
-        cin >> pass;
-        fstream uf;
-        uf.open(User,ios::in | ios::out|ios::app);
-        uf << "username:"<<user<<"/"<<"password:"<<pass<<"/"<<endl;
-        enter =1;
-        uf.close();
+getnewuser:{
+            cout << "enter your username:";
+            cin >> user;
+            cout << "enter your password:";
+            cin >> pass;
+            fstream uf;
+            uf.open(User,ios::in | ios::out);
+            str tp="" , tmp1="";
+            while(getline(uf,tp)){
+                tmp1="";
+                int uname = tp.find("username:");
+                for(int  j=uname+9;tp[j]!='/';j++)
+                    tmp1+=tp[j];
+                if(tmp1==user)
+                {
+                    cout << "This username isn't available, try another username" << endl;
+                    Sleep(1000);
+                    system("CLS");
+                    goto getnewuser;
+                }
+            }
+            uf.close();
+            uf.open(User,ios::in | ios::out|ios::app);
+                uf << "username:"<<user<<"/"<<"password:"<<pass<<"/"<<endl;
+                enter =1;
+                uf.close();
+        }
     }
     else if(iii=="u") {
         cout << "enter your username:";
@@ -376,7 +402,7 @@ int main(void)
         uf.open(User,ios::in | ios::out);
         if(uf.is_open())
         {
-            string tp="" , tmp1,tmp2;
+            str tp="" , tmp1,tmp2;
             while(getline(uf,tp)){
                 int uname = tp.find("username:");
                 for(int  j=uname+9;tp[j]!='/';j++)
@@ -395,37 +421,40 @@ int main(void)
             if(enter==0)
             {
                 cout << "username or password is wrong" << endl;
+                Sleep(1000);
+                system("CLS");
                 main();
             }
         }
     }
     if(enter==1)
     {
-        cout << "Hi " << user << endl ;
+        cout << "Welcome " << user << endl ;
         cout << "for search enter s,for search in group enter sg, for print all the film enter p, for show in group enter g" << endl;
-        string input;
+        str input;
         cin >> input;
+
         //search in groups
         if(input=="sg")
         {
-            string si;
-
+            str si;
             while(si!="f")
             {
                 system("CLS");
                 ifstream fileInput;
                 int offset;
-                string line;
-                string search ;
+                str line;
+                str search ;
                 cout << "enter your string : " << endl;
                 cin >> search;
+
                 // open file to search
                 fileInput.open(Group);
                 if(fileInput.is_open()) {
                     while(!fileInput.eof()) {
                         getline(fileInput, line);
                         if ((offset = line.find(search, 0)) != string::npos) {
-                            string tmp="";
+                            str tmp="";
                             int iname = line.find("NAME:");
                             for(int  j=iname;line[j]!='/';j++)
                                 tmp+=line[j];
@@ -446,7 +475,6 @@ int main(void)
                     cout << "Unable to open file.";
                     break;
                 }
-
                 cout << "for finish searching enter f else enter c" << endl;
                 cin >> si;
             }
@@ -454,15 +482,14 @@ int main(void)
         //search in movies
         if(input=="s")
         {
-            string si;
-
+            str si;
             while(si!="f")
             {
                 system("CLS");
                 ifstream fileInput;
                 int offset;
-                string line;
-                string search ;
+                str line;
+                str search ;
                 cout << "enter your string : " << endl;
                 cin >> search;
                 // open file to search
@@ -472,7 +499,7 @@ int main(void)
                         getline(fileInput, line);
                         if ((offset = line.find(search, 0)) != string::npos) {
 
-                            string tmp="";
+                            str tmp="";
 
                             int iname = line.find("NAME:");
                             for(int  j=iname;line[j]!='/';j++)
@@ -534,11 +561,11 @@ int main(void)
             return 0;
         }
         cout << "Do you want to show in group? Y or N ?" <<endl;
-        string g;
+        str g;
         cin >> g;
         if(g=="Y")
         {
-            QMapIterator<string,QList<string>> ii(sq);
+            QMapIterator<str,QList<str>> ii(sq);
             while (ii.hasNext()) {
                 i=0;
                 ii.next();
