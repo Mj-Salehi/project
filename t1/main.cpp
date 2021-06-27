@@ -614,6 +614,7 @@ welcom:
                 cout << "Unkown input!" << endl << "try agin!" << endl;
                 Sleep(1000);
                 system("CLS");
+                goto welcom;
             }
         }
     }
