@@ -128,10 +128,10 @@ int main(void)
                     tmp2+=tp[j];
                 if(user==tmp1 && pass==tmp2)
                 {
-                    cout << "Welcome admin" <<endl;
+                    cout << "Welcome admin" << endl;
                     enter =1;
                     while(1){
-                        //update movies file
+                        //update movie's file
                         if(st==true)
                         {
                             i=0;
@@ -149,6 +149,7 @@ int main(void)
                             }
                             st=false;
                         }
+                        //update group's file
                         if(gt==true)
                         {
                             i=0;
@@ -165,6 +166,7 @@ int main(void)
                         }
                         cout << "Enter + for add, - for remove, p for print, g for make group, sg for show in group, e for edit a film, f for finish " << endl;
                         cin >> in;
+                        //add movie
                         if(in=="+")
                         {
                             ofstream qst;
@@ -196,14 +198,16 @@ int main(void)
                             cout << "Enter the capacity of film : ";
                             cin >> capacity;
                             qst << "CAPACITY:"<<capacity<<"/";
-                            Movie a(name,director,actors,year,capacity);
-                            q.push_back(a);
                             qst <<endl;
                             qst.close();
+
+                            //build a class and add to list
+                            Movie a(name,director,actors,year,capacity);
+                            q.push_back(a);
                         }
+                        //print movie
                         else if(in=="p")
                         {
-
                             if(q.size()>0)
                             {
                                 i=1;
@@ -211,13 +215,14 @@ int main(void)
                                 {
                                     cout <<i;
                                     cout <<": ";
-                                    cout <<(*itr).name << endl;
+                                    cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
                                 }
                                 i=1;
                             }
                             else
                                 cout << "No films are available" << endl;
                         }
+                        //delete movie
                         else if(in=="-")
                         {
                             if(q.size()>0)
@@ -233,17 +238,15 @@ int main(void)
                                 int rm;
                                 cin >> rm;
                                 q.removeAt(rm-1);
+                                cout << "deleted successfuly!" << endl;
                                 i=1;
-                                for(auto itr = q.begin();itr!=q.end();itr ++,i++)
-                                {
-                                    cout <<i<<": " <<(*itr).name << endl;
 
-                                }
                                 st=true;
                             }
                             else
                                 cout << "No films are available" << endl;
                         }
+                        //make group
                         else if(in=="g")
                         {
                             i=1;
@@ -269,34 +272,21 @@ int main(void)
                                 tmp+=q.at(number-1).name;
                                 tmp+=" ";
                             }
+                            qq.push_back(tmp);
                             fstream gfile;
                             gfile.open(Group,ios::in|ios::out|ios::app);
-                            qq.push_back(tmp);
                             gfile << "NAME:" << ng << "/" << "MEMBER:" << tmp << "/" << endl;
                             gfile.close();
                             sq[ng] = qq;
-                            QMapIterator<str,QList<str>> ii(sq);
-                            while (ii.hasNext()) {
 
-                                i=0;
-                                ii.next();
-                                cout << ii.key() << ":" ;
-                                for(auto it = ii.value().begin();it!=ii.value().end();it++)
-                                {
-                                    cout << ii.value().at(i) <<" ";
-
-                                    i++;
-                                }
-                                cout << endl;
-
-                            }
+                            cout << ng << " group made successfuly!" << endl;
 
                         }
+                        //show groups
                         else if(in=="sg")
                         {
                             QMapIterator<str,QList<str>> ii(sq);
                             while (ii.hasNext()) {
-
                                 i=0;
                                 ii.next();
                                 cout << ii.key() << ":" ;
@@ -307,11 +297,10 @@ int main(void)
                                     i++;
                                 }
                                 cout << endl;
-
                             }
 
                         }
-
+                        //edit movie
                         else if(in=="e")
                         {
                             i=1;
@@ -388,9 +377,9 @@ getnewuser:{
             }
             uf.close();
             uf.open(User,ios::in | ios::out|ios::app);
-                uf << "username:"<<user<<"/"<<"password:"<<pass<<"/"<<endl;
-                enter =1;
-                uf.close();
+            uf << "username:"<<user<<"/"<<"password:"<<pass<<"/"<<endl;
+            enter =1;
+            uf.close();
         }
     }
     else if(iii=="u") {
@@ -430,6 +419,7 @@ getnewuser:{
     if(enter==1)
     {
         cout << "Welcome " << user << endl ;
+welcom:
         cout << "for search enter s,for search in group enter sg, for print all the film enter p, for show in group enter g" << endl;
         str input;
         cin >> input;
@@ -498,7 +488,6 @@ getnewuser:{
                     while(!fileInput.eof()) {
                         getline(fileInput, line);
                         if ((offset = line.find(search, 0)) != string::npos) {
-
                             str tmp="";
 
                             int iname = line.find("NAME:");
@@ -587,16 +576,17 @@ getnewuser:{
         if(h<=0)
         {
             cout << "it's impossible to choose, try again" <<endl;
-            main();
+            Sleep(2000);
+            system("CLS");
+            goto welcom;
         }
         h--;
         Movie a(q.at(ch).name,q.at(ch).director,q.at(ch).actors,q.at(ch).year,h);
         q.replace(ch,a);
+        //update movie's file
         st=true;
-
         if(st==true)
         {
-
             i=0;
             fstream qst;
             qst.open(Movies,ios::in | ios::out |ios::trunc);
