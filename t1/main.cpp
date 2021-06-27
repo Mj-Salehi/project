@@ -37,11 +37,10 @@ int main(void)
     int na , year ,capacity ,i=1 ;
     str in , name, director;
     bool st =false,gt=false,go=true;
-
     //add movise from file to qlist
     fstream qst;
     qst.open(Movies,ios::in | ios::out);
-    if(qst.is_open()){
+    if(qst.is_open() && qst.peek() != std::ifstream::traits_type::eof()){
         str tp="" , tmp;
         while(getline(qst,tp)){
             int iname = tp.find("NAME:");
@@ -79,7 +78,8 @@ int main(void)
     {
         fstream gfile;
         gfile.open(Group,ios::in|ios::out);
-        if(gfile.is_open() )
+
+        if(gfile.is_open() && gfile.peek() != std::ifstream::traits_type::eof() )
         {
 
             str tp="" , tmp, gname,members;
@@ -420,189 +420,203 @@ getnewuser:{
     {
         cout << "Welcome " << user << endl ;
 welcom:
-        cout << "for search enter s,for search in group enter sg, for print all the film enter p, for show in group enter g" << endl;
-        str input;
-        cin >> input;
-
-        //search in groups
-        if(input=="sg")
+        while(true)
         {
-            str si;
-            while(si!="f")
-            {
-                system("CLS");
-                ifstream fileInput;
-                int offset;
-                str line;
-                str search ;
-                cout << "enter your string : " << endl;
-                cin >> search;
+            cout << "for search movies enter s,for search in groups enter sg, for print all of the movies enter p, for show in group enter g, for choose enter c and for exit enter e" << endl;
+            str input;
+            cin >> input;
 
-                // open file to search
-                fileInput.open(Group);
-                if(fileInput.is_open()) {
-                    while(!fileInput.eof()) {
-                        getline(fileInput, line);
-                        if ((offset = line.find(search, 0)) != string::npos) {
-                            str tmp="";
-                            int iname = line.find("NAME:");
-                            for(int  j=iname;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp << endl ;
-                            tmp="";
-                            int idirector = line.find("MEMBER:");
-                            for(int j=idirector;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp << endl ;
-                            tmp="";
-                            cout << endl;
-                        }
-                    }
-                    fileInput.close();
-                }
-                else if(!fileInput.is_open())
+            //search in groups
+            if(input=="sg")
+            {
+                str si;
+                while(si!="f")
                 {
-                    cout << "Unable to open file.";
-                    break;
-                }
-                cout << "for finish searching enter f else enter c" << endl;
-                cin >> si;
-            }
-        }
-        //search in movies
-        if(input=="s")
-        {
-            str si;
-            while(si!="f")
-            {
-                system("CLS");
-                ifstream fileInput;
-                int offset;
-                str line;
-                str search ;
-                cout << "enter your string : " << endl;
-                cin >> search;
-                // open file to search
-                fileInput.open(Movies);
-                if(fileInput.is_open()) {
-                    while(!fileInput.eof()) {
-                        getline(fileInput, line);
-                        if ((offset = line.find(search, 0)) != string::npos) {
-                            str tmp="";
+                    system("CLS");
+                    ifstream fileInput;
+                    int offset;
+                    str line;
+                    str search ;
+                    cout << "enter your string : " << endl;
+                    cin >> search;
 
-                            int iname = line.find("NAME:");
-                            for(int  j=iname;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp << endl ;
-                            tmp="";
-                            int idirector = line.find("DIRECTOR:");
-                            for(int j=idirector;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp << endl ;
-                            tmp="";
-                            int iactors = line.find("ACTORS:");
-                            for(int j=iactors;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp<< endl ;
-                            tmp="";
-                            int iyear = line.find("YEAR:");
-                            for(int j=iyear;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp<< endl ;
-                            tmp="";
-                            int icapacity = line.find("CAPACITY:");
-                            for(int j=icapacity;line[j]!='/';j++)
-                                tmp+=line[j];
-                            cout << tmp<< endl ;
-                            tmp="";
-
-                            cout << endl;
+                    // open file to search
+                    fileInput.open(Group);
+                    if(fileInput.is_open()) {
+                        while(!fileInput.eof()) {
+                            getline(fileInput, line);
+                            if ((offset = line.find(search, 0)) != string::npos) {
+                                str tmp="";
+                                int iname = line.find("NAME:");
+                                for(int  j=iname;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp << endl ;
+                                tmp="";
+                                int idirector = line.find("MEMBER:");
+                                for(int j=idirector;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp << endl ;
+                                tmp="";
+                                cout << endl;
+                            }
                         }
+                        fileInput.close();
                     }
-                    fileInput.close();
+                    else if(!fileInput.is_open())
+                    {
+                        cout << "Unable to open file.";
+                        break;
+                    }
+                    cout << "for finish searching enter f else enter c" << endl;
+                    cin >> si;
                 }
-                else if(!fileInput.is_open())
-                {
-                    cout << "Unable to open file.";
-                    break;
-                }
-
-                cout << "for finish searching enter f else enter c" << endl;
-                cin >> si;
             }
-        }
-        //print movies
-        if(q.size()>0)
-        {
-            cout << "Movise are : " <<endl;
-            i=1;
-            for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
+            //search in movies
+            str si="c";
+            if(input=="s")
             {
-                cout <<i;
-                cout <<": ";
-                cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
+                while(si=="c")
+                {
+                    system("CLS");
+                    ifstream fileInput;
+                    int offset;
+                    str line;
+                    str search ;
+                    cout << "enter your string : " << endl;
+                    cin >> search;
+                    // open file to search
+                    fileInput.open(Movies);
+                    if(fileInput.is_open()) {
+                        while(!fileInput.eof()) {
+                            getline(fileInput, line);
+                            if ((offset = line.find(search, 0)) != string::npos) {
+                                str tmp="";
+
+                                int iname = line.find("NAME:");
+                                for(int  j=iname;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp << endl ;
+                                tmp="";
+                                int idirector = line.find("DIRECTOR:");
+                                for(int j=idirector;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp << endl ;
+                                tmp="";
+                                int iactors = line.find("ACTORS:");
+                                for(int j=iactors;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp<< endl ;
+                                tmp="";
+                                int iyear = line.find("YEAR:");
+                                for(int j=iyear;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp<< endl ;
+                                tmp="";
+                                int icapacity = line.find("CAPACITY:");
+                                for(int j=icapacity;line[j]!='/';j++)
+                                    tmp+=line[j];
+                                cout << tmp<< endl ;
+                                tmp="";
+
+                                cout << endl;
+                            }
+                        }
+                        fileInput.close();
+                    }
+                    else if(!fileInput.is_open())
+                    {
+                        cout << "Unable to open file.";
+                        break;
+                    }
+
+                    cout << "for finish searching enter f else enter c" << endl;
+                    cin >> si;
+                }
+                if(si=="f")
+                    goto welcom;
             }
-            i=1;
-        }
-        else
-        {
-            cout << "No films are available" << endl;
-            return 0;
-        }
-        cout << "Do you want to show in group? Y or N ?" <<endl;
-        str g;
-        cin >> g;
-        if(g=="Y")
-        {
-            QMapIterator<str,QList<str>> ii(sq);
-            while (ii.hasNext()) {
+            //print movies
+            if(input=="p")
+            {
+                if(q.size()>0)
+                {
+                    cout << "Movise are : " <<endl;
+                    i=1;
+                    for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
+                    {
+                        cout <<i;
+                        cout <<": ";
+                        cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
+                    }
+                    i=1;
+                }
+                else
+                {
+                    cout << "No films are available" << endl;
+                    return 0;
+                }
+            }
+            if(input=="g")
+            {
+                QMapIterator<str,QList<str>> ii(sq);
+                while (ii.hasNext()) {
+                    i=0;
+                    ii.next();
+                    cout << ii.key() << ":" ;
+                    for(auto it = ii.value().begin();it!=ii.value().end();it++)
+                    {
+                        cout << ii.value().at(i) <<" ";
+                        i++;
+                    }
+                    cout << endl;
+                }
+            }
+            if(input=="c")
+            {
+                cout << "choose a film" << endl;
+                int ch;
+                cin >> ch;
+                ch--;
+                int h=q.at(ch).capacity;
+                if(h<=0)
+                {
+                    cout << "it's impossible to choose, try again" <<endl;
+                    Sleep(2000);
+                    system("CLS");
+                    goto welcom;
+                }
+                h--;
+                Movie a(q.at(ch).name,q.at(ch).director,q.at(ch).actors,q.at(ch).year,h);
+                q.replace(ch,a);
+                //update movie's file
+                st=true;
+
                 i=0;
-                ii.next();
-                cout << ii.key() << ":" ;
-                for(auto it = ii.value().begin();it!=ii.value().end();it++)
+                fstream qst;
+                qst.open(Movies,ios::in | ios::out |ios::trunc);
+                for(auto itr = q.begin();itr!=q.end();itr ++,i++)
                 {
-                    cout << ii.value().at(i) <<" ";
-                    i++;
+                    qst <<"NAME:"<<(*itr).name<<"/"
+                       <<"DIRECTOR:"<<(*itr).director<<"/"
+                      <<"ACTORS:"<<(*itr).actors.at(i)<<"/"
+                     <<"YEAR:"<<(*itr).year<<"/"
+                    <<"CAPACITY:"<<(*itr).capacity<<"/"
+                    <<endl;
+
                 }
-                cout << endl;
-            }
-        }
+                st=false;
 
-        cout << "choose a film" << endl;
-        int ch;
-        cin >> ch;
-        ch--;
-        int h=q.at(ch).capacity;
-        if(h<=0)
-        {
-            cout << "it's impossible to choose, try again" <<endl;
-            Sleep(2000);
-            system("CLS");
-            goto welcom;
-        }
-        h--;
-        Movie a(q.at(ch).name,q.at(ch).director,q.at(ch).actors,q.at(ch).year,h);
-        q.replace(ch,a);
-        //update movie's file
-        st=true;
-        if(st==true)
-        {
-            i=0;
-            fstream qst;
-            qst.open(Movies,ios::in | ios::out |ios::trunc);
-            for(auto itr = q.begin();itr!=q.end();itr ++,i++)
+            }
+            if(input=="e")
+                break;
+            else
             {
-                qst <<"NAME:"<<(*itr).name<<"/"
-                   <<"DIRECTOR:"<<(*itr).director<<"/"
-                  <<"ACTORS:"<<(*itr).actors.at(i)<<"/"
-                 <<"YEAR:"<<(*itr).year<<"/"
-                <<"CAPACITY:"<<(*itr).capacity<<"/"
-                <<endl;
-
+                cout << "Unkown input!" << endl << "try agin!" << endl;
+                Sleep(1000);
+                system("CLS");
             }
-            st=false;
         }
     }
-
+    cout << "Have good time!!" << endl;
     return 0;
 }
