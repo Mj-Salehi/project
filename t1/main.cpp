@@ -31,6 +31,9 @@ public:
 };
 int main(void)
 {
+
+    //https://github.com/Mj-Salehi/project
+
     str si="c";
     QList<Movie> q;//list of moives
     QList<str> qq;//list of members of groups
