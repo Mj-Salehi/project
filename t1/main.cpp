@@ -82,7 +82,7 @@ int main(void)
     if(go==true)
     {
         fstream gfile;
-        gfile.open(Group,ios::in|ios::out);
+        gfile.open(Group,ios::in);
 
         if(gfile.is_open() && gfile.peek() != std::ifstream::traits_type::eof() )
         {
@@ -223,6 +223,25 @@ int main(void)
                                     cout <<": ";
                                     cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
                                 }
+                                string h;
+                                cout << "Do you want to show in details? Y or N ?" <<endl;
+                                cin >> h;
+                                if(h=="Y")
+                                {
+                                    cout << "Movise are : " <<endl;
+                                    i=1;
+                                    for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
+                                    {
+                                        cout <<i;
+                                        cout <<": " << endl;
+                                        cout <<"NAME:"<<(*itr).name <<endl
+                                            <<"DIRECTOR:"<<(*itr).director <<endl
+                                           <<"ACTORS:"<<(*itr).actors.at(i-1) <<endl
+                                          <<"YEAR:"<<(*itr).year <<endl
+                                         <<"CAPACITY:"<<(*itr).capacity<< endl;
+                                    }
+                                    i=1;
+                                }
                                 i=1;
                             }
                             else
@@ -234,7 +253,7 @@ int main(void)
                             if(q.size()>0)
                             {
                                 i=1;
-                                cout << "The films are here : " << endl;
+                                cout << "Movies are here : " << endl;
                                 for(auto itr = q.begin();itr!=q.end();itr ++,i++)
                                 {
                                     cout <<i<<": " <<(*itr).name << endl;
@@ -273,7 +292,7 @@ int main(void)
                             str tmp="";
                             for(int j=0;j<nug;j++)
                             {
-                                cout << "enter the " << j+1<<" member : ";
+                                cout << "enter member" << j+1<<" : ";
                                 cin >> number;
                                 tmp+=q.at(number-1).name;
                                 tmp+=" ";
@@ -281,7 +300,7 @@ int main(void)
                             qq.push_back(tmp);
                             fstream gfile;
                             gfile.open(Group,ios::in|ios::out|ios::app);
-                            gfile << "NAME:" << ng << "/" << "MEMBER:" << tmp << "/" << endl;
+                            gfile << endl <<  "NAME:" << ng << "/" << "MEMBER:" << tmp << "/" ;
                             gfile.close();
                             sq[ng] = qq;
 
@@ -426,7 +445,7 @@ getnewuser:{
 welcom:
         while(true)
         {
-            cout << "for search movies enter s" << endl << "for search in groups enter sg" << endl << "for print all of the movies enter p" << endl << "for show in group enter g" << endl << "for choose enter c " << endl << "for exit enter e" << endl;
+            cout  <<"for print all of the movies enter p" << endl << "for show in group enter g" << endl << "for search movies enter s" << endl << "for search in groups enter sg" << endl << "for choose enter c " << endl << "for exit enter e" << endl;
             str input;
             cin >> input;
 
@@ -474,6 +493,7 @@ welcom:
                     cout << "for finish searching enter f else enter c" << endl;
                     cin >> si;
                 }
+                cout << endl;
             }
             //search in movies
             else if(input=="s")
@@ -537,23 +557,38 @@ welcom:
                 }
                 if(si=="f")
                     goto welcom;
+                cout << endl;
             }
             //print movies
             else if(input=="p")
             {
                 if(q.size()>0)
                 {
-                    cout << "Movise are : " <<endl;
                     i=1;
                     for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
                     {
                         cout <<i;
-                        cout <<": " << endl;
-                        cout <<"NAME:"<<(*itr).name <<endl
-                            <<"DIRECTOR:"<<(*itr).director <<endl
-                            <<"ACTORS:"<<(*itr).actors.at(i-1) <<endl
-                            <<"YEAR:"<<(*itr).year <<endl
-                            <<"CAPACITY:"<<(*itr).capacity<< endl;
+                        cout <<": ";
+                        cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
+                    }
+                    string h;
+                    cout << "Do you want to show in details? Y or N ?" <<endl;
+                    cin >> h;
+                    if(h=="Y")
+                    {
+                        cout << "Movise are : " <<endl;
+                        i=1;
+                        for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
+                        {
+                            cout <<i;
+                            cout <<": " << endl;
+                            cout <<"NAME:"<<(*itr).name <<endl
+                                <<"DIRECTOR:"<<(*itr).director <<endl
+                               <<"ACTORS:"<<(*itr).actors.at(i-1) <<endl
+                              <<"YEAR:"<<(*itr).year <<endl
+                             <<"CAPACITY:"<<(*itr).capacity<< endl;
+                        }
+                        i=1;
                     }
                     i=1;
                 }
@@ -562,10 +597,12 @@ welcom:
                     cout << "No films are available" << endl;
                     return 0;
                 }
+                cout << endl;
             }
             //print groups
             else if(input=="g")
             {
+
                 QMapIterator<str,QList<str>> ii(sq);
                 while (ii.hasNext()) {
                     i=0;
@@ -578,6 +615,7 @@ welcom:
                     }
                     cout << endl;
                 }
+                cout << endl;
             }
             else if(input=="c")
             {
@@ -624,7 +662,7 @@ welcom:
 
                 }
                 st=false;
-
+                cout << endl;
             }
             else if(input=="e")
                 break;
