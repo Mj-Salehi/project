@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QMap>
 #include <fstream>
+//files
 #define Movies "Movies.txt"
 #define User "user.txt"
 #define Admin "admin.txt"
@@ -30,13 +31,15 @@ public:
 };
 int main(void)
 {
-    QList<Movie> q;
-    QList<str> qq;
-    QMap<str,QList<str>> sq;
+    str si="c";
+    QList<Movie> q;//list of moives
+    QList<str> qq;//list of members of groups
+    QMap<str,QList<str>> sq;//neme of group to members
     QVector<str> actors;
     int na , year ,capacity ,i=1 ;
     str in , name, director;
     bool st =false,gt=false,go=true;
+
     //add movise from file to qlist
     fstream qst;
     qst.open(Movies,ios::in | ios::out);
@@ -68,12 +71,14 @@ int main(void)
                 tmp+=tp[j];
             capacity = stoi(tmp);
             Movie a(name,director,actors,year,capacity);
+
             q.push_back(a);
             tmp="";
         }
         qst.close();
     }
-    //add group from file to qlist
+
+    //add groups from file to qlist
     if(go==true)
     {
         fstream gfile;
@@ -96,6 +101,7 @@ int main(void)
                 members = tmp;
                 tmp="";
                 qq.push_back(members);
+                //map name to members
                 sq[gname] = qq;
             }
         }
@@ -103,9 +109,9 @@ int main(void)
         gfile.close();
     }
     int enter=0;
-    //-------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
     cout << "Hi"<< endl;
-    cout << "If you are admin enter a, if you are user enter u and if you are new user enter n"<< endl;
+    cout << "if you are admin enter a" << endl << "if you are user enter u " << endl << "if you are new enter n"<< endl;
     str user , pass ,  iii;
     cin >> iii;
     if(iii=="a")
@@ -131,7 +137,7 @@ int main(void)
                     cout << "Welcome admin" << endl;
                     enter =1;
                     while(1){
-                        //update movie's file
+                        //update movie's file, (at first st is false)
                         if(st==true)
                         {
                             i=0;
@@ -164,7 +170,7 @@ int main(void)
                             }
                             gt=false;
                         }
-                        cout << "Enter + for add, - for remove, p for print, g for make group, sg for show in group, e for edit a film, f for finish " << endl;
+                        cout << "Enter" << endl << "+ for add" << endl << "- for remove" << endl << "p for print" << endl << "g for make group" << endl << "sg for show in group" << endl << "e for edit a film" << endl << "f for finish " << endl;
                         cin >> in;
                         //add movie
                         if(in=="+")
@@ -340,9 +346,7 @@ int main(void)
                             break;
                     }
                 }
-                tmp1="";
-                tmp2=tmp1;
-                if(user!=tmp1 || pass!=tmp2)
+                else if(user!=tmp1 || pass!=tmp2)
                 {
                     cout << "username or password is wrong" << endl;
                     Sleep(1000);
@@ -422,7 +426,7 @@ getnewuser:{
 welcom:
         while(true)
         {
-            cout << "for search movies enter s,for search in groups enter sg, for print all of the movies enter p, for show in group enter g, for choose enter c and for exit enter e" << endl;
+            cout << "for search movies enter s" << endl << "for search in groups enter sg" << endl << "for print all of the movies enter p" << endl << "for show in group enter g" << endl << "for choose enter c " << endl << "for exit enter e" << endl;
             str input;
             cin >> input;
 
@@ -472,8 +476,7 @@ welcom:
                 }
             }
             //search in movies
-            str si="c";
-            if(input=="s")
+            else if(input=="s")
             {
                 while(si=="c")
                 {
@@ -536,7 +539,7 @@ welcom:
                     goto welcom;
             }
             //print movies
-            if(input=="p")
+            else if(input=="p")
             {
                 if(q.size()>0)
                 {
@@ -545,8 +548,12 @@ welcom:
                     for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
                     {
                         cout <<i;
-                        cout <<": ";
-                        cout <<(*itr).name <<"->" << (*itr).capacity  << endl;
+                        cout <<": " << endl;
+                        cout <<"NAME:"<<(*itr).name <<endl
+                            <<"DIRECTOR:"<<(*itr).director <<endl
+                            <<"ACTORS:"<<(*itr).actors.at(i-1) <<endl
+                            <<"YEAR:"<<(*itr).year <<endl
+                            <<"CAPACITY:"<<(*itr).capacity<< endl;
                     }
                     i=1;
                 }
@@ -556,7 +563,8 @@ welcom:
                     return 0;
                 }
             }
-            if(input=="g")
+            //print groups
+            else if(input=="g")
             {
                 QMapIterator<str,QList<str>> ii(sq);
                 while (ii.hasNext()) {
@@ -571,9 +579,21 @@ welcom:
                     cout << endl;
                 }
             }
-            if(input=="c")
+            else if(input=="c")
             {
-                cout << "choose a film" << endl;
+                if(q.size()>0)
+                {
+                    cout << "Movise are : " <<endl;
+                    i=1;
+                    for(auto itr = q.begin();itr!=q.end();itr ++ ,i++)
+                    {
+                        cout <<i;
+                        cout <<": " ;
+                        cout <<(*itr).name <<"-->" <<(*itr).capacity<< endl;
+                    }
+                    i=1;
+                }
+                cout << "enter number of movie" << endl;
                 int ch;
                 cin >> ch;
                 ch--;
@@ -590,7 +610,6 @@ welcom:
                 q.replace(ch,a);
                 //update movie's file
                 st=true;
-
                 i=0;
                 fstream qst;
                 qst.open(Movies,ios::in | ios::out |ios::trunc);
@@ -607,12 +626,12 @@ welcom:
                 st=false;
 
             }
-            if(input=="e")
+            else if(input=="e")
                 break;
             else
             {
                 cout << "Unkown input!" << endl << "try agin!" << endl;
-                Sleep(1000);
+                Sleep(2000);
                 system("CLS");
                 goto welcom;
             }
